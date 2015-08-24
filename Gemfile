@@ -22,6 +22,13 @@ gem "metamagic"
 gem "simple_form"
 gem "slim"
 
+# omniauth
+
+gem 'omniauth'
+gem 'omniauth-twitter'
+gem 'omniauth-facebook'
+gem 'omniauth-linkedin'
+
 # all other gems
 gem "decent_exposure"
 gem "devise"
