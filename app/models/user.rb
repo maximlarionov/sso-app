@@ -8,8 +8,9 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
-
   validates :full_name, presence: true
+
+  has_many :identities, dependent: :destroy
 
   def to_s
     full_name
@@ -20,7 +21,6 @@ class User < ActiveRecord::Base
   end
 
   def self.find_for_oauth(auth, signed_in_resource = nil)
-
     # Get the identity and user if they exist
     identity = Identity.find_for_oauth(auth)
 
