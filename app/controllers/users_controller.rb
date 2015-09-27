@@ -1,6 +1,4 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
-
   expose(:user)
 
   def update
@@ -17,13 +15,16 @@ class UsersController < ApplicationController
   end
 
   def finish_signup
-    if request.patch? && params[:user] #&& params[:user][:email]
+    if request.patch? && params[:user] && params[:user][:email] && params[:user][:password]
       if user.update(user_params)
         user.skip_reconfirmation!
         sign_in(user, :bypass => true)
-        redirect_to user, notice: 'Your profile was successfully updated.'
+        redirect_to root_path, notice: 'Your profile was successfully updated.'
       else
-        @show_errors = true
+        respond_to do |format|
+          format.html { render action: 'finish_signup', user: user }
+          format.json { render json: user.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -39,8 +40,8 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    accessible = [ :full_name, :email ] # extend with your own params
-    accessible << [ :password, :password_confirmation ] unless params[:user][:password].blank?
+    accessible = [ :full_name, :email, :password ] # extend with your own params
+    accessible << [ :password_confirmation ] unless params[:user][:password].blank?
     params.require(:user).permit(accessible)
   end
 end

@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable, :confirmable,
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  validates_format_of :email, :without => TEMP_EMAIL_REGEX, on: :update
+  validates_format_of :email, without: TEMP_EMAIL_REGEX, on: :update
   validates :full_name, presence: true
 
   has_many :identities, dependent: :destroy
@@ -17,7 +17,11 @@ class User < ActiveRecord::Base
   end
 
   def full_name_with_email
-    "#{self[:full_name]} (#{email})"
+    if email_verified?
+      "#{self[:full_name]} (#{email})"
+    else
+      full_name
+    end
   end
 
   def self.find_for_oauth(auth, signed_in_resource = nil)
