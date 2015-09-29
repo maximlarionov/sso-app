@@ -8,10 +8,10 @@
       html: { method: :patch } do |f|
 
       .form-inputs
-        = f.input :email, required: true, autofocus: true, value: 'Your email here', placeholder: "Your email here"
-        = f.input :password, required: true
+        = f.input :email, required: true, autofocus: true,  placeholder: "Your email here"
+
+        = f.input :password, required: true, hint: '', placeholder: "Your password here"
 
       .form-actions
         = f.button :submit, "Finish Signup"
-
 

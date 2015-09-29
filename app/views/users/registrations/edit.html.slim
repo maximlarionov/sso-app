@@ -11,7 +11,10 @@
 
       .form-inputs
         = f.input :full_name, required: true, autofocus: true
-        = f.input :email, required: true
+        - if !current_user.confirmed?
+          = link_to "Sorry, but your email isn't confirmed yet. Please confirm.", confirm_email_path(current_user)
+        - else
+          = f.input :email, required: true
         = f.input :password,
             autocomplete: "off",
             required: false
@@ -33,3 +36,13 @@
           registration_path(resource_name),
           data: { confirm: 'Are you sure?' },
           method: :delete
+
+    ul
+      - resource_class.omniauth_providers.each do |provider|
+        - if !current_user.identities.map(&:provider).include?(provider.to_s)
+          li = link_to "Authorize via #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider)
+        - else
+          / li =
+          li = link_to "Successfully authorized via #{provider.to_s.titleize}. Unautorize?", destroy_identity_path(current_user, provider)
+
+
