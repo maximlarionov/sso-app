@@ -2,7 +2,6 @@ class UsersController < ApplicationController
   include FinishAuthentication
 
   respond_to :html
-
   expose(:user, attributes: :user_params)
 
   def update
@@ -24,14 +23,14 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    accessible = [ :full_name, :email, :password ] # extend with your own params
-    accessible << [ :password_confirmation ] unless params[:user][:password].blank?
+    accessible = %i(full_name email password) # extend with your own params
+    accessible << %i(password_confirmation) unless params[:user][:password].blank?
     params.require(:user).permit(accessible)
   end
 
   def sign_in_with_user
     user == current_user ? user : current_user
 
-    sign_in(user, :bypass => true)
+    sign_in(user, bypass: true)
   end
 end

@@ -1,14 +1,14 @@
 class User < ActiveRecord::Base
-  TEMP_EMAIL_PREFIX = 'change@me'
+  TEMP_EMAIL_PREFIX = "change@me"
   TEMP_EMAIL_REGEX = /\Achange@me/
-  TEMP_PASSWORD_PREFIX = 'temp_pass'
+  TEMP_PASSWORD_PREFIX = "temp_pass"
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable
   devise :database_authenticatable, :registerable, :confirmable,
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
-  validates_format_of :email, without: TEMP_EMAIL_REGEX, on: :update
+  validates :email, format: { without: TEMP_EMAIL_REGEX, on: :update }
   validates :full_name, presence: true
 
   has_many :identities, dependent: :destroy
@@ -41,20 +41,19 @@ class User < ActiveRecord::Base
       # If no verified email was provided we assign a temporary email and ask the
       # user to verify it on the next step via UsersController.finish_signup
 
-
       # email_is_verified = auth.info.email && (auth.info.verified || auth.info.verified_email)
       email = auth.extra.raw_info.email
       # if email_is_verified
 
-      user = User.where(:email => email).first if email
+      user = User.find_by_email(email) if email
 
-      # Create the user if it's a new registration
+      # Create the user if it,s a new registration
       if user.nil?
         user = User.new(
           full_name: auth.extra.raw_info.name,
-          #username: auth.info.nickname || auth.uid,
+          # username: auth.info.nickname || auth.uid,
           email: auth.extra.raw_info.email.presence || "#{TEMP_EMAIL_PREFIX}-#{auth.uid}-#{auth.provider}.com",
-          password: Devise.friendly_token[0,20]
+          password: Devise.friendly_token[0, 20]
         )
         user.skip_confirmation_notification!
         user.save!
@@ -70,6 +69,6 @@ class User < ActiveRecord::Base
   end
 
   def email_verified?
-    self.email && self.email !~ TEMP_EMAIL_REGEX
+    email.present? && email !~ TEMP_EMAIL_REGEX
   end
 end
