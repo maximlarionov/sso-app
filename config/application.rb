@@ -33,5 +33,12 @@ module RailsBase
 
     # Default host for action mailer, initializers/mailer.rb
     config.host = "localhost:5000"
+
+    config.before_configuration do
+      env_file = File.join(Rails.root, "config", "env_vars.yml")
+      YAML.load(File.open(env_file)).each do |key, value|
+        ENV[key.to_s] = value
+      end if File.exist?(env_file)
+    end
   end
 end

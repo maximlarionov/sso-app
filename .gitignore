@@ -5,6 +5,7 @@ tmp/*
 coverage/*
 rerun.txt
 config/database.yml
+config/env_vars.yml
 doc/**/*
 vendor/bundle
 vendor/cache

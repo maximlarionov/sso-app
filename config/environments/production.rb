@@ -81,5 +81,5 @@ Rails.application.configure do
 
   # Application specific options
   #
-  config.host = "fs-rails-base.herokuapp.com"
+  config.host = "https://sso-app-pdp-fs-maxl.herokuapp.com"
 end
