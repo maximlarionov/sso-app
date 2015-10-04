@@ -234,7 +234,7 @@ Devise.setup do |config|
     "1652155461665847",
     "60b23d0f48129eb8d29a19c0191d635b",
     scope: "email",
-    info_fields: "name,email"
+    info_fields: "id,email,gender,link,locale,name,timezone,updated_time,verified"
 
   config.omniauth :twitter, "KEY", "SECRET"
   config.omniauth :linked_in, "KEY", "SECRET"

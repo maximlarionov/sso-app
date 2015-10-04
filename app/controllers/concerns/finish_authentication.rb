@@ -7,9 +7,9 @@ module FinishAuthentication
     user.update(user_params) ? sign_in_user : render_errors
   end
 
-  def required_params
-    params[:user] && params[:user][:email] && params[:user][:password]
-  end
+  # def required_params
+  #   params[:user] && params[:user][:email] && params[:user][:password]
+  # end
 
   private
 

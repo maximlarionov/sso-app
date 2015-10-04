@@ -6,7 +6,7 @@ class UsersController < ApplicationController
 
   def update
     user.update
-    sign_in_with_user
+    # sign_in_with_user
     respond_with user
   end
 
@@ -28,9 +28,9 @@ class UsersController < ApplicationController
     params.require(:user).permit(accessible)
   end
 
-  def sign_in_with_user
-    user == current_user ? user : current_user
+  # def sign_in_with_user
+  #   user == current_user ? user : current_user
 
-    sign_in(user, bypass: true)
-  end
+  #   sign_in(user, bypass: true)
+  # end
 end
