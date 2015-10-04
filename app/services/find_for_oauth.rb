@@ -1,32 +1,33 @@
 class FindForOauth
-  def initialize(user, auth, signed_in_resource = nil)
-    @user = user
+  TEMP_EMAIL_PREFIX = "change@me"
+
+  def initialize(auth, signed_in_resource = nil)
     @auth = auth
     @signed_in_resource = signed_in_resource
   end
 
-  def find_for_oauth
+  def call
     find_user_by_identity
   end
 
   private
 
+  def identity
+    Identity.find_for_oauth(@auth)
+  end
+
   def find_user_by_identity
-    identity = Identity.find_for_oauth(@auth)
-
-    user = @signed_in_resource ? @signed_in_resource : identity.user
-
-    user || find_user_by_email
+    @signed_in_resource || identity.user || find_user_by_email
   end
 
   def find_user_by_email
-    email = @auth.extra.raw_info.email
+    email = @auth.extra.raw_info.email if email_verified?
 
-    user = User.find_by_email(email)
+    user = User.find_by_email(email) || new_user_registration
 
-    new_user_registration if user.nil?
+    connect_accounts(identity, user)
 
-    associate_user_with(identity)
+    user
   end
 
   def new_user_registration
@@ -37,12 +38,18 @@ class FindForOauth
     )
     user.skip_confirmation_notification!
     user.save!
+
+    user
   end
 
-  def associate_user_with(identity)
-    return false unless identity.user != @user
+  def connect_accounts(identity, user)
+    return false unless identity.user != user
 
-    identity.user = @user
+    identity.user = user
     identity.save!
+  end
+
+  def email_verified?
+    @auth.info.verified?
   end
 end

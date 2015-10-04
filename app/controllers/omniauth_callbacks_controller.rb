@@ -22,6 +22,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   private
 
   def find_for_oauth
-    FindForOauth.new(current_user, env["omniauth.auth"])
+    FindForOauth.new(env["omniauth.auth"], current_user).call
   end
 end

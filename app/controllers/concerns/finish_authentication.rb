@@ -2,14 +2,10 @@ module FinishAuthentication
   extend ActiveSupport::Concern
 
   def finish_signup
-    return false unless request.patch? && user.valid?
+    return false unless request.patch?
 
     user.update(user_params) ? sign_in_user : render_errors
   end
-
-  # def required_params
-  #   params[:user] && params[:user][:email] && params[:user][:password]
-  # end
 
   private
 

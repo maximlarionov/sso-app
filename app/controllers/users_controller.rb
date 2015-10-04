@@ -5,8 +5,7 @@ class UsersController < ApplicationController
   expose(:user, attributes: :user_params)
 
   def update
-    user.update
-    # sign_in_with_user
+    sign_in_with_user if user.update
     respond_with user
   end
 
@@ -23,14 +22,14 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    accessible = %i(full_name email password) # extend with your own params
+    accessible = %i(full_name email password)
     accessible << %i(password_confirmation) unless params[:user][:password].blank?
     params.require(:user).permit(accessible)
   end
 
-  # def sign_in_with_user
-  #   user == current_user ? user : current_user
+  def sign_in_with_user
+    user ||= current_user
 
-  #   sign_in(user, bypass: true)
-  # end
+    sign_in(user, bypass: true)
+  end
 end
