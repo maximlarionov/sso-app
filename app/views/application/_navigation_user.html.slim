@@ -5,8 +5,9 @@ ul.right
       ul.dropdown
         new_user_registration_path
         li
-          a href = edit_user_registration_path
-            | Edit profile
+          - if current_user.email_verified?
+            a href = edit_user_registration_path
+              | Edit profile
         li
           a href = destroy_user_session_path
             | Sign out

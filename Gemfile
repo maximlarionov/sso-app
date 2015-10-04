@@ -22,6 +22,13 @@ gem "metamagic"
 gem "simple_form"
 gem "slim"
 
+# omniauth
+
+gem "omniauth"
+gem "omniauth-twitter"
+gem "omniauth-facebook"
+gem "omniauth-linkedin"
+
 # all other gems
 gem "decent_exposure"
 gem "devise"
@@ -63,6 +70,7 @@ group :development, :test do
   gem "jasmine", "> 2.0"
   gem "jasmine-jquery-rails"
   gem "pry-rails"
+  gem "pry-remote"
   gem "rails_best_practices"
   gem "rspec-rails", "~> 3.0"
   gem "rubocop"
