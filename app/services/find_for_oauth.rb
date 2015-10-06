@@ -1,55 +1,39 @@
 class FindForOauth
-  TEMP_EMAIL_PREFIX = "change@me"
-
   def initialize(auth, signed_in_resource = nil)
     @auth = auth
     @signed_in_resource = signed_in_resource
+    @identity = Identity.find_for_oauth(auth)
   end
 
   def call
-    find_user_by_identity
+    user = current_user || authenticate_user
+    connect_accounts!(user)
+
+    user
   end
 
   private
 
-  def identity
-    Identity.find_for_oauth(@auth)
+  def current_user
+    @signed_in_resource || @identity.user
   end
 
-  def find_user_by_identity
-    @signed_in_resource || identity.user || find_user_by_email
+  def authenticate_user
+    sign_in_with_oauth || sign_up_with_oauth
   end
 
-  def find_user_by_email
-    email = @auth.extra.raw_info.email if email_verified?
-
-    user = User.find_by_email(email) || new_user_registration
-
-    connect_accounts(identity, user)
-
-    user
+  def sign_in_with_oauth
+    ExistingUserEmailAuthenticationService.new(@auth).call
   end
 
-  def new_user_registration
-    user = User.new(
-      full_name: @auth.extra.raw_info.name,
-      email: @auth.extra.raw_info.email.presence || "#{TEMP_EMAIL_PREFIX}-#{@auth.uid}-#{@auth.provider}.com",
-      password: Devise.friendly_token[0, 20]
-    )
-    user.skip_confirmation_notification!
-    user.save!
-
-    user
+  def sign_up_with_oauth
+    NewUserRegistrationService.new(@auth).call
   end
 
-  def connect_accounts(identity, user)
-    return false unless identity.user != user
+  def connect_accounts!(user)
+    return false if @identity.user == user
 
-    identity.user = user
-    identity.save!
-  end
-
-  def email_verified?
-    @auth.info.verified?
+    @identity.user = user
+    @identity.save!
   end
 end
