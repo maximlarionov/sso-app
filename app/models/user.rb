@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
     :recoverable, :rememberable, :trackable, :validatable, :omniauthable
 
   validates :email, format: { without: TEMP_EMAIL_REGEX, on: :update }
-  validates :full_name, presence: true
+  validates :email, :full_name, presence: true
 
   has_many :identities, dependent: :destroy
 
@@ -22,6 +22,6 @@ class User < ActiveRecord::Base
   end
 
   def email_verified?
-    email.present? && email !~ TEMP_EMAIL_REGEX
+    email !~ TEMP_EMAIL_REGEX
   end
 end
