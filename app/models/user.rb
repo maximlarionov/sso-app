@@ -22,6 +22,6 @@ class User < ActiveRecord::Base
   end
 
   def email_verified?
-    email !~ TEMP_EMAIL_REGEX
+    email !~ TEMP_EMAIL_REGEX && self.confirmed?
   end
 end

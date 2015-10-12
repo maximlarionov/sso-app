@@ -7,7 +7,7 @@ class FindForOauth
 
   def call
     user = current_user || authenticate_user
-    connect_accounts!(user)
+    connect_accounts!(user) unless @identity.user == user
 
     user
   end
@@ -31,8 +31,6 @@ class FindForOauth
   end
 
   def connect_accounts!(user)
-    return false if @identity.user == user
-
     @identity.user = user
     @identity.save!
   end

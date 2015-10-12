@@ -14,10 +14,11 @@ class NewUserRegistrationService
   private
 
   def create_user_from_auth!
-    User.new(user_params)
-
+    user = User.new(user_params)
     user.skip_confirmation_notification!
     user.save!
+
+    user
   end
 
   def user_params

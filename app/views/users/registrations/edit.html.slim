@@ -11,10 +11,7 @@
 
       .form-inputs
         = f.input :full_name, required: true, autofocus: true
-        - if !current_user.confirmed?
-          = link_to "Sorry, but your email isn't confirmed yet. Please confirm.", confirm_email_path(current_user)
-        - else
-          = f.input :email, required: true
+        = f.input :email, required: true
         = f.input :password,
             autocomplete: "off",
             required: false
