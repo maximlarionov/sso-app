@@ -32,6 +32,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @auth = env["omniauth.auth"]
     verified = @auth.info.verified || @auth.extra.raw_info.verified
 
-    redirect_to new_user_session_path, notice: "Your #{@auth.provider.titleize} account is not verified." unless verified
+    redirect_to new_user_session_path,
+      notice: "Your #{@auth.provider.titleize} account is not verified." unless verified
   end
 end

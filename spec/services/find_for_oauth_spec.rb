@@ -3,15 +3,15 @@ require "rails_helper"
 describe FindForOauth do
   let(:auth_hashie) { create(:auth_hashie) }
   let(:find_for_oauth) { FindForOauth.new(auth_hashie, signed_in_resource) }
-  let(:signed_in_resource) { create(:user, confirmed_at: DateTime.now, email: "old@email.mail") }
+  let(:signed_in_resource) { create(:user, confirmed_at: Time.zone.now, email: "old@email.mail") }
 
   describe "#call" do
     subject(:user_from_response) { find_for_oauth.call }
 
     context "when connecting social account to signed in user" do
-      let!(:identity) { create(:identity, uid: "2233311", provider: "twitter", user: signed_in_resource)}
+      let!(:identity) { create(:identity, uid: "2233311", provider: "twitter", user: signed_in_resource) }
 
-      it { is_expected.to eq signed_in_resource}
+      it { is_expected.to eq signed_in_resource }
 
       describe "params" do
         before { find_for_oauth.call }

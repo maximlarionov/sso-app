@@ -31,7 +31,7 @@ describe User do
     end
 
     context "when email is not verified" do
-      let(:user) { create(:user, :email => "change@me-facebook.com") }
+      let(:user) { create(:user, email: "change@me-facebook.com") }
 
       it { is_expected.to eq user.full_name }
     end
@@ -47,14 +47,14 @@ describe User do
     subject { user }
 
     context "when not verified" do
-      let(:user) { create(:user, :email => "change@me-facebook.com") }
+      let(:user) { create(:user, email: "change@me-facebook.com") }
 
       its(:email_verified?) { is_expected.to be_falsey }
       its(:email) { is_expected.to match User::TEMP_EMAIL_REGEX }
     end
 
     context "when verified" do
-     let(:user) { create(:user, :email => "such-email@doge-post.com") }
+      let(:user) { create(:user, email: "such-email@doge-post.com") }
 
       it(:email_verified?) { is_expected.to be_truthy }
       its(:email) { is_expected.not_to match User::TEMP_EMAIL_REGEX }

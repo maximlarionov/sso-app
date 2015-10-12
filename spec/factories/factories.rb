@@ -5,13 +5,15 @@ FactoryGirl.define do
     provider "facebook"
     uid "1234567"
 
-    info { OpenStruct.new(
-      email: "joe@bloggs.com",
-      name: "Joe Bloggs",
-      verified: true)
-    }
+    info do
+      OpenStruct.new(
+        email: "joe@bloggs.com",
+        name: "Joe Bloggs",
+        verified: true
+      )
+    end
 
-    extra {
+    extra do
       OpenStruct.new(
         raw_info: OpenStruct.new(
           name: "Joe Bloggs",
@@ -19,6 +21,6 @@ FactoryGirl.define do
           verified: true
         )
       )
-    }
+    end
   end
 end
