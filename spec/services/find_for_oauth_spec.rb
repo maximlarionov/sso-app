@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe FindForOauth do
-  let(:auth_hashie) { create(:auth_hashie) }
+  include_context :auth_hashie
   let(:find_for_oauth) { FindForOauth.new(auth_hashie, signed_in_resource) }
   let(:signed_in_resource) { create(:user, confirmed_at: Time.zone.now, email: "old@email.mail") }
 

@@ -1,21 +1,20 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :verify_auth_hash
 
-  expose(:user) { find_for_oauth }
-
-  def facebook
-    if user.persisted?
-      sign_in_and_redirect user, event: :authentication
-      user.send_confirmation_instructions
-      set_flash_message(:notice, :success, kind: "Facebook") if is_navigational_format?
-    else
-      session["devise.facebook_data"] = env["omniauth.auth"]
-      redirect_to new_user_registration_url
+  Identity::PROVIDERS.map(&:to_s).each do |provider|
+    define_method("#{provider}") do
+      if user.persisted?
+        sign_in_and_redirect user, event: :authentication
+        set_flash_message(:notice, :success, kind: "#{provider.titleize}") if is_navigational_format?
+      else
+        session["devise.#{provider}_data"] = auth_hash
+        redirect_to new_user_registration_url
+      end
     end
   end
 
   def after_sign_in_path_for(resource)
-    if resource.email_verified? && resource.confirmed?
+    if resource.email_verified?
       super resource
     else
       finish_signup_path(resource)
@@ -24,15 +23,18 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-  def find_for_oauth
-    FindForOauth.new(env["omniauth.auth"], current_user).call
+  def user
+    @user ||= FindForOauth.new(auth_hash, current_user).call
+  end
+
+  def auth_hash
+    env["omniauth.auth"]
   end
 
   def verify_auth_hash
-    @auth = env["omniauth.auth"]
-    verified = @auth.info.verified || @auth.extra.raw_info.verified
+    verified = AuthVerificationPolicy.new(auth_hash).public_send(auth_hash.provider)
 
     redirect_to new_user_session_path,
-      notice: "Your #{@auth.provider.titleize} account is not verified." unless verified
+      notice: "Your #{auth_hash.provider.titleize} account is not verified." unless verified
   end
 end

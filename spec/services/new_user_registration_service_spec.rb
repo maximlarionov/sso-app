@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe NewUserRegistrationService do
-  let(:auth_hashie) { create(:auth_hashie) }
+  include_context :auth_hashie
 
   describe "#call" do
     subject(:service_call) { described_class.new(auth_hashie).call }

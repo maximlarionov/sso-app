@@ -2,7 +2,8 @@ class User < ActiveRecord::Base
   TEMP_EMAIL_REGEX = /\Achange@me/
 
   devise :database_authenticatable, :registerable, :confirmable,
-    :recoverable, :rememberable, :trackable, :validatable, :omniauthable
+    :recoverable, :rememberable, :trackable, :validatable, :omniauthable,
+    omniauth_providers: Identity::PROVIDERS
 
   validates :email, format: { without: TEMP_EMAIL_REGEX, on: :update }
   validates :email, :full_name, presence: true

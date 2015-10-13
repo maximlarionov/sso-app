@@ -1,35 +1,40 @@
 class UsersController < ApplicationController
-  include FinishAuthentication
-
   respond_to :html
   expose(:user, attributes: :user_params)
 
-  def update
-    sign_in_with_user if user.update
-    respond_with user
+  before_action :authenticate_user!, only: :home
+
+  def home
   end
 
-  def destroy
-    user.destroy
-    redirect_to root_url
-  end
+  def finish_signup
+    return false unless request.patch?
 
-  def confirm_email
-    user.resend_confirmation_instructions
-    redirect_to edit_user_registration_path
+    user.update_attributes(user_params) ? sign_in_user : render_errors
   end
 
   private
 
-  def user_params
-    accessible = %i(full_name email password)
-    accessible << %i(password_confirmation) unless params[:user][:password].blank?
-    params.require(:user).permit(accessible)
+  def sign_in_user
+    confirm_user
+    user.skip_reconfirmation!
+    sign_in(user, bypass: true)
+    redirect_to root_path, notice: "Please confirm your email from your mailbox."
   end
 
-  def sign_in_with_user
-    user ||= current_user
+  def render_errors
+    respond_to do |format|
+      format.html { render action: "finish_signup", user: user }
+      format.json { render json: user.errors, status: :unprocessable_entity }
+    end
+  end
 
-    sign_in(user, bypass: true)
+  def confirm_user
+    user.send_confirmation_instructions unless user.confirmed?
+  end
+
+  def user_params
+    accessible = %i(full_name email password)
+    params.require(:user).permit(accessible)
   end
 end

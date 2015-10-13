@@ -1,4 +1,6 @@
 class Identity < ActiveRecord::Base
+  PROVIDERS = %i(facebook twitter github google_oauth2)
+
   belongs_to :user
   validates :uid, :provider, presence: true
   validates :provider, uniqueness: { scope: :uid }

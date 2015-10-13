@@ -1,11 +1,11 @@
 require "rails_helper"
 
 feature "Update Account" do
+  include_context :auth_hashie
   let(:user) { create :user, :confirmed }
-  let(:auth) { create :auth_hashie }
 
   background do
-    user.identities.find_for_oauth(auth)
+    user.identities.find_for_oauth(auth_hashie)
 
     login_as user
     visit edit_user_registration_path(user)

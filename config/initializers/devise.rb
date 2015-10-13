@@ -237,8 +237,11 @@ Devise.setup do |config|
     info_fields: "id,email,gender,link,locale,name,timezone,updated_time,verified"
 
   config.omniauth :twitter, "KEY", "SECRET"
-  config.omniauth :linked_in, "KEY", "SECRET"
+  config.omniauth :github,
+    ENV["GITHUB_APP_ID"],
+    ENV["GITHUB_APP_SECRET"]
 
+  config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"]
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

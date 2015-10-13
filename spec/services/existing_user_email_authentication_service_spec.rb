@@ -1,7 +1,7 @@
 require "rails_helper"
 
 describe ExistingUserEmailAuthenticationService do
-  let(:auth_hashie) { create(:auth_hashie) }
+  include_context :auth_hashie
   let!(:user) { create(:user, :from_auth_hashie) }
 
   describe "#call" do
