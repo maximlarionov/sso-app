@@ -1,6 +1,5 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   before_action :verify_auth_hash
-  after_action :connect_accounts
 
   Identity::PROVIDERS.map(&:to_s).each do |provider|
     define_method("#{provider}") do
@@ -24,23 +23,13 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-  def identity
-    Identity.find_for_oauth(auth_hash)
-  end
-
-  def connect_accounts
-    return nil if identity.user == user
-
-    identity.user = user
-    identity.save!
-  end
-
   def verify_auth_hash
-    redirect_to new_user_session_path, notice: auth_policy.notice unless auth_policy.policy
+    redirect_to new_user_session_path,
+      notice: "Your #{auth_hash.provider.titleize} account is not verified." unless auth_policy
   end
 
   def auth_policy
-    AuthVerificationPolicy.new(auth_hash, user, user_signed_in?).public_send(auth_hash.provider)
+    AuthVerificationPolicy.new(auth_hash).public_send(auth_hash.provider)
   end
 
   def user

@@ -7,6 +7,7 @@ class FindForOauth
 
   def call
     user = current_user || authenticate_user
+    connect_accounts!(user)
 
     user
   end
@@ -27,5 +28,12 @@ class FindForOauth
 
   def sign_up_with_oauth
     NewUserRegistrationService.new(@auth).call
+  end
+
+  def connect_accounts!(user)
+    return nil if @identity.user == user
+
+    @identity.user = user
+    @identity.save!
   end
 end
