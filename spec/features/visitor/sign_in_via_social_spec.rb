@@ -1,6 +1,8 @@
 require "rails_helper"
 
 feature "Sign In with social account" do
+  include_context :stub_omniauth
+
   let!(:user) { create :user, :confirmed, :from_auth_hashie }
 
   def sign_in_with_facebook
@@ -8,8 +10,6 @@ feature "Sign In with social account" do
 
     click_link "Sign in with Facebook"
   end
-
-  include_context :stub_omniauth
 
   scenario "user signs in directly to main page" do
     sign_in_with_facebook

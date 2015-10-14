@@ -1,5 +1,5 @@
 class AuthVerificationPolicy
-  attr_reader :auth
+  attr_reader :auth, :user
 
   def initialize(auth)
     @auth = auth
@@ -13,7 +13,6 @@ class AuthVerificationPolicy
     auth.extra.raw_info.verified
   end
 
-  # fix me: GitHub has untrustworthy access
   def github
     true
   end

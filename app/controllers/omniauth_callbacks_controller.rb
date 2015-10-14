@@ -1,14 +1,11 @@
 class OmniauthCallbacksController < Devise::OmniauthCallbacksController
-  before_action :verify_auth_hash
-
   Identity::PROVIDERS.map(&:to_s).each do |provider|
     define_method("#{provider}") do
-      if user.persisted?
-        sign_in_and_redirect user, event: :authentication
-        set_flash_message(:notice, :success, kind: "#{provider.titleize}") if is_navigational_format?
-      else
-        session["devise.#{provider}_data"] = auth_hash
-        redirect_to new_user_registration_url
+      begin
+        handle_user(user_from_oauth, provider)
+      rescue ArgumentError
+        redirect_to new_user_session_path,
+          notice: "Your #{provider.titleize} account is not verified. Please verify it via profile page."
       end
     end
   end
@@ -23,17 +20,18 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   private
 
-  def verify_auth_hash
-    redirect_to new_user_session_path,
-      notice: "Your #{auth_hash.provider.titleize} account is not verified." unless auth_policy
+  def handle_user(user, provider)
+    if user.persisted?
+      sign_in_and_redirect user, event: :authentication
+      set_flash_message(:notice, :success, kind: "#{provider.titleize}") if is_navigational_format?
+    else
+      session["devise.#{provider}_data"] = auth_hash
+      redirect_to new_user_registration_url
+    end
   end
 
-  def auth_policy
-    AuthVerificationPolicy.new(auth_hash).public_send(auth_hash.provider)
-  end
-
-  def user
-    @user ||= FindForOauth.new(auth_hash, current_user).call
+  def user_from_oauth
+    @user ||= OauthOrganizer.new(auth_hash, current_user).call
   end
 
   def auth_hash

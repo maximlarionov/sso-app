@@ -1,9 +1,9 @@
 require "rails_helper"
 
 feature "Sign Up with social account" do
-  let(:name_from_auth_hash) { "Joe Bloggs" }
-
   include_context :stub_omniauth
+
+  let(:name_from_auth_hash) { "Joe Bloggs" }
 
   scenario "Visitor signs up" do
     visit new_user_session_path
