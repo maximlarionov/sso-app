@@ -1,5 +1,5 @@
 class Identity < ActiveRecord::Base
-  PROVIDERS = %i(facebook twitter github google_oauth2)
+  PROVIDERS = %i(facebook github google_oauth2)
 
   belongs_to :user
   validates :uid, :provider, presence: true
