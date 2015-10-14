@@ -12,16 +12,6 @@ describe FindForOauth do
       let!(:identity) { create(:identity, uid: "2233311", provider: "twitter", user: signed_in_resource) }
 
       it { is_expected.to eq signed_in_resource }
-
-      describe "params" do
-        before { find_for_oauth.call }
-
-        it "has two identities now" do
-          expect(user_from_response.reload.identities.map(&:provider)).to eq %w(twitter facebook)
-        end
-
-        its(:email) { is_expected.to eq "old@email.mail" }
-      end
     end
 
     context "when authenticating existing user with social account" do
@@ -33,10 +23,6 @@ describe FindForOauth do
 
         find_for_oauth.call
       end
-
-      it "creates new Social Identity for user" do
-        expect { find_for_oauth.call }.to change { Identity.count }.by(1)
-      end
     end
 
     context "when authenticating new user with social account" do
@@ -46,10 +32,6 @@ describe FindForOauth do
         expect_any_instance_of(NewUserRegistrationService).to receive(:call)
 
         find_for_oauth.call
-      end
-
-      it "creates Social Identity for returned user" do
-        expect { find_for_oauth.call }.to change { Identity.count }.by(1)
       end
     end
   end
