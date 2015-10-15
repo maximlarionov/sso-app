@@ -3,9 +3,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     define_method("#{provider}") do
       begin
         handle_user(user_from_oauth, provider)
-      rescue OauthOrganizer::OauthError
-        redirect_to new_user_session_path,
-          notice: "Your #{provider.titleize} account is not verified. Please verify it via profile page."
+      rescue OauthOrganizer::OauthError => e
+        handle_error(e, provider)
       end
     end
   end
@@ -19,6 +18,15 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   private
+
+  def handle_error(e, provider)
+    if user_signed_in?
+      redirect_to root_path, notice: e.message
+    else
+      redirect_to new_user_session_path,
+        notice: "Your #{provider.titleize} account can't be used to sign in. Please verify it via profile page."
+    end
+  end
 
   def handle_user(user, provider)
     if user.persisted?

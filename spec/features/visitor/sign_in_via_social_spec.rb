@@ -25,7 +25,7 @@ feature "Sign In with social account" do
     scenario "is notified with notice" do
       sign_in_with_facebook
 
-      expect(page).to have_content("Your Facebook account is not verified")
+      expect(page).to have_content("Your Facebook account can't be used to sign in. Please verify it via profile page.")
       expect(page).not_to have_content(user.full_name)
       expect(page).not_to have_content(user.email)
     end
