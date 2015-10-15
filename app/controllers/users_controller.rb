@@ -17,9 +17,9 @@ class UsersController < ApplicationController
 
   def sign_in_user
     user.skip_reconfirmation!
-    sign_in(user, bypass: true)
-    redirect_to root_path, notice: "Please confirm your email from your mailbox."
     confirm_user
+    sign_in(user, bypass: true)
+    redirect_to root_path, notice: "Welcome!"
   end
 
   def render_errors
@@ -30,7 +30,7 @@ class UsersController < ApplicationController
   end
 
   def confirm_user
-    user.send_confirmation_instructions unless user.confirmed?
+    user.update_attribute(:confirmed_at, Time.zone.now)
   end
 
   def user_params

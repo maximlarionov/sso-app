@@ -16,7 +16,7 @@ describe OauthOrganizer do
       before { allow(oauth_organizer).to receive(:build_response).and_return(nil) }
 
       it "raises an error" do
-        expect { oauth_organizer.call }.to raise_error(ArgumentError)
+        expect { oauth_organizer.call }.to raise_error(OauthOrganizer::OauthError)
       end
     end
 
@@ -26,7 +26,7 @@ describe OauthOrganizer do
       end
 
       it "raises an error" do
-        expect { oauth_organizer.call }.to raise_error(ArgumentError)
+        expect { oauth_organizer.call }.to raise_error(OauthOrganizer::OauthError)
       end
     end
 
@@ -90,7 +90,7 @@ describe OauthOrganizer do
         end
 
         it "raises an error" do
-          expect { oauth_organizer.call }.to raise_error(ArgumentError)
+          expect { oauth_organizer.call }.to raise_error(OauthOrganizer::OauthError)
         end
       end
     end

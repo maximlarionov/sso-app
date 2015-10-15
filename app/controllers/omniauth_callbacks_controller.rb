@@ -3,7 +3,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     define_method("#{provider}") do
       begin
         handle_user(user_from_oauth, provider)
-      rescue ArgumentError
+      rescue OauthOrganizer::OauthError
         redirect_to new_user_session_path,
           notice: "Your #{provider.titleize} account is not verified. Please verify it via profile page."
       end

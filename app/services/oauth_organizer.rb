@@ -1,4 +1,7 @@
 class OauthOrganizer
+  class OauthError < StandardError
+  end
+
   def initialize(auth, current_user)
     @auth = auth
     @current_user = current_user
@@ -36,7 +39,9 @@ class OauthOrganizer
   end
 
   def fail_oauth
-    fail ArgumentError, "Verification checking is not implemented for provider: '#{@auth.provider}'"
+    fail OauthError,
+      "Sorry, but yours #{@auth.provider.titleize} failed verification.
+      Seems like yours #{@auth.provider.titleize} account hasn't been verified."
   end
 
   def connect_accounts!(user)

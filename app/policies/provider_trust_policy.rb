@@ -1,15 +1,20 @@
 class ProviderTrustPolicy
+  attr_reader :auth, :user
+  private :auth, :user
+
+  UNTRUSTWORTHY_PROVIDERS = %w(github)
+
   def initialize(auth, user)
     @auth = auth
     @user = user
   end
 
   def trustworthy?
-    send(@auth.provider)
+    send(auth.provider)
   end
 
   def trustworthy_for_sign_up?
-    %w(github).include?(@auth.provider)
+    UNTRUSTWORTHY_PROVIDERS.include?(auth.provider)
   end
 
   private
@@ -23,8 +28,8 @@ class ProviderTrustPolicy
   end
 
   def github
-    return false unless @user
+    return false unless user
 
-    @user.identities.map(&:provider).include?(@auth.provider)
+    user.identities.map(&:provider).include?(auth.provider)
   end
 end
