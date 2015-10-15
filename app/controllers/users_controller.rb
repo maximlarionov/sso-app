@@ -16,10 +16,10 @@ class UsersController < ApplicationController
   private
 
   def sign_in_user
-    confirm_user
     user.skip_reconfirmation!
     sign_in(user, bypass: true)
     redirect_to root_path, notice: "Please confirm your email from your mailbox."
+    confirm_user
   end
 
   def render_errors
