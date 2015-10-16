@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   end
 
   def finish_signup
-    return false unless request.patch?
+    return false unless request.patch? # don't try to update user with get request, lol
 
     user.update_attributes(user_params) ? sign_in_user : render_errors
   end

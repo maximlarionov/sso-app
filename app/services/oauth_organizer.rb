@@ -35,7 +35,7 @@ class OauthOrganizer
   end
 
   def sign_up_with_oauth
-    NewUserRegistrationService.new(@auth).call if auth_verified? && !found_user_by_email? && !trustworthy_for_sign_up?
+    NewUserRegistrationService.new(@auth).call if !found_user_by_email? && auth_verified?
   end
 
   def fail_oauth

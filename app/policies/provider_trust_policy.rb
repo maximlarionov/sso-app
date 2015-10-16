@@ -2,8 +2,6 @@ class ProviderTrustPolicy
   attr_reader :auth, :user
   private :auth, :user
 
-  UNTRUSTWORTHY_PROVIDERS = %w(github)
-
   def initialize(auth, user)
     @auth = auth
     @user = user
@@ -11,10 +9,6 @@ class ProviderTrustPolicy
 
   def trustworthy?
     send(auth.provider)
-  end
-
-  def trustworthy_for_sign_up?
-    UNTRUSTWORTHY_PROVIDERS.include?(auth.provider)
   end
 
   private
