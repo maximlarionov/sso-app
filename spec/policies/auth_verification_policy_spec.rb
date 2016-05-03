@@ -26,9 +26,9 @@ describe AuthVerificationPolicy do
     it { is_expected.to be_truthy }
 
     context "when account isn't verified" do
-      include_context :invalid_auth_hashie
+      include_context :invalid_github_auth_hashie
 
-      it { is_expected.to be_truthy }
+      it { is_expected.to be_falsey }
     end
   end
 

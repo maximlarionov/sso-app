@@ -236,10 +236,10 @@ Devise.setup do |config|
     scope: "email",
     info_fields: "id,email,gender,link,locale,name,timezone,updated_time,verified"
 
-  config.omniauth :twitter, "KEY", "SECRET"
   config.omniauth :github,
     ENV["GITHUB_APP_ID"],
-    ENV["GITHUB_APP_SECRET"]
+    ENV["GITHUB_APP_SECRET"],
+    scope: "user"
 
   config.omniauth :google_oauth2, ENV["GOOGLE_CLIENT_ID"], ENV["GOOGLE_CLIENT_SECRET"], skip_jwt: true
   # ==> Warden configuration

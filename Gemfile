@@ -2,7 +2,7 @@ source "https://rubygems.org"
 
 ruby "2.2.2"
 
-gem "rails", "4.2.3"
+gem "rails", "4.2.5.2"
 gem "pg"
 
 # assets
@@ -25,14 +25,13 @@ gem "slim"
 # omniauth
 
 gem "omniauth"
-gem "omniauth-twitter"
 gem "omniauth-facebook"
 gem "omniauth-github"
 gem "omniauth-google-oauth2"
 
 # all other gems
 gem "decent_exposure"
-gem "devise"
+gem "devise", "~> 3.5.4"
 gem "google-analytics-rails"
 gem "interactor"
 gem "kaminari"
@@ -42,6 +41,7 @@ gem "seedbank"
 gem "thin"
 gem "pundit"
 gem "rack-canonical-host"
+gem "libv8", "~> 3.16.14.13"
 
 group :staging, :production do
   gem "rails_12factor"

@@ -44,6 +44,25 @@ shared_context :invalid_auth_hashie do
   end
 end
 
+shared_context :invalid_github_auth_hashie do
+  let(:auth_hashie) do
+    OmniAuth::AuthHash.new(
+      provider: "github",
+      uid: "123545",
+      info: {
+        email: "",
+        name: "Joe Bloggs"
+      },
+      extra: {
+        raw_info: {
+          email: "",
+          name: "Joe Bloggs"
+        }
+      }
+    )
+  end
+end
+
 shared_context :stub_omniauth do
   background do
     OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new(
