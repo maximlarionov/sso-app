@@ -3,29 +3,21 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     define_method("#{provider}") do
       begin
         handle_user(user_from_oauth, provider)
-      rescue OauthOrganizer::OauthError => e
-        handle_error(e, provider)
+      rescue OauthOrganizer::OauthError
+        redirect_to oauth_error_path, flash: { notice: \
+          "Your #{provider.titleize} account can't be used to sign in. Please verify it via profile page." }
       end
     end
   end
 
   def after_sign_in_path_for(resource)
-    if resource.email_verified?
-      super resource
-    else
-      finish_signup_path(resource)
-    end
+    resource.email_verified? ? super(resource) : finish_signup_path(resource)
   end
 
   private
 
-  def handle_error(e, provider)
-    if user_signed_in?
-      redirect_to root_path, notice: e.message
-    else
-      redirect_to new_user_session_path,
-        notice: "Your #{provider.titleize} account can't be used to sign in. Please verify it via profile page."
-    end
+  def oauth_error_path
+    user_signed_in? ? root_path : new_user_session_path
   end
 
   def handle_user(user, provider)

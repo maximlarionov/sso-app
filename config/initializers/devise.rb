@@ -236,8 +236,6 @@ Devise.setup do |config|
     scope: "email",
     info_fields: "id,email,gender,link,locale,name,timezone,updated_time,verified"
 
-  # config.omniauth :twitter, "KEY", "SECRET"
-
   config.omniauth :github,
     ENV["GITHUB_APP_ID"],
     ENV["GITHUB_APP_SECRET"],
