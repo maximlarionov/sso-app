@@ -27,7 +27,7 @@ class OauthOrganizer
   end
 
   def find_user_by_email
-    ExistingUserEmailAuthenticationService.new(@auth).call if auth_verified? && trustworthy_for_sign_in?
+    ExistingUserEmailAuthenticationService.new(@auth).call if auth_verified?
   end
 
   def found_user_by_email?
@@ -53,13 +53,5 @@ class OauthOrganizer
 
   def auth_verified?
     AuthVerificationPolicy.new(@auth).public_send(@auth.provider)
-  end
-
-  def trustworthy_for_sign_in?
-    ProviderTrustPolicy.new(@auth, @current_user).trustworthy?
-  end
-
-  def trustworthy_for_sign_up?
-    ProviderTrustPolicy.new(@auth, @current_user).trustworthy_for_sign_up?
   end
 end

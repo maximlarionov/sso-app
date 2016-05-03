@@ -34,7 +34,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    accessible = %i(full_name email password)
-    params.require(:user).permit(accessible)
+    params.require(:user).permit %i(full_name email password)
   end
 end

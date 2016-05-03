@@ -14,7 +14,10 @@ class AuthVerificationPolicy
   end
 
   def github
-    true
+    # since github oauth doesn't return unconfirmed emails
+    # https://github.com/intridea/omniauth-github/issues/36
+
+    auth.extra.raw_info.email.present?
   end
 
   def google_oauth2
